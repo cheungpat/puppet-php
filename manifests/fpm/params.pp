@@ -41,9 +41,23 @@
 class php::fpm::params {
 
   $ensure   = $php::params::ensure
-  $package  = 'php5-fpm'
+  case $operatingsystem {
+    debian, ubuntu: {
+      $package = 'php5-fpm'
+      $service = 'php5-fpm'
+      $inifile  = '/etc/php5/fpm/php.ini'
+      $conffile = '/etc/php5/fpm/php-fpm.conf'
+      $pooldir  = '/etc/php5/fpm/pool.d'
+    }
+    centos, redhat: {
+      $package  = 'php-fpm'
+      $service  = 'php-fpm'
+      $inifile  = '/etc/php.ini'
+      $conffile = '/etc/php-fpm.conf'
+      $pooldir  = '/etc/php-fpm.d'
+    }
+  }
   $provider = undef
-  $inifile  = '/etc/php5/fpm/php.ini'
   $settings = {
     set => {
       'PHP/short_open_tag'       => 'Off',

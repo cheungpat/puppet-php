@@ -24,26 +24,25 @@ class php::fpm::daemon (
 
   if ( $ensure == 'absent' ) {
 
-    package { 'php5-fpm':
+    package { $php::fpm::params::package:
       ensure => absent
     }
 
   } else {
 
-    package { 'php5-fpm':
+    package { $php::fpm::params::package:
       ensure => installed
     }
 
-    service { 'php5-fpm':
+    service { $php::fpm::params::service:
       ensure    => running,
       enable    => true,
-      restart   => 'service php5-fpm reload',
       hasstatus => true,
-      require   => Package['php5-fpm'],
+      require   => Package[$php::fpm::params::package],
     }
 
-    file { '/etc/php5/fpm/php-fpm.conf':
-      notify  => Service['php5-fpm'],
+    file { $php::fpm::params::conffile:
+      notify  => Service[$php::fpm::params::service],
       content => template('php/fpm/php-fpm.conf.erb'),
       owner   => root,
       group   => root,

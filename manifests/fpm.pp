@@ -42,6 +42,7 @@
 class php::fpm(
   $ensure   = $php::fpm::params::ensure,
   $package  = $php::fpm::params::package,
+  $service  = $php::fpm::params::service,
   $provider = $php::fpm::params::provider,
   $inifile  = $php::fpm::params::inifile,
   $settings = $php::fpm::params::settings
@@ -57,10 +58,9 @@ class php::fpm(
     settings => $settings
   }
 
-  service { 'php5-fpm':
+  service { $service:
     ensure    => running,
     enable    => true,
-    restart   => 'service php5-fpm reload',
     hasstatus => true,
     require   => Package[$package]
   }
